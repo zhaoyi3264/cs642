@@ -1,0 +1,6 @@
+Use this file to explain how your sploit3 works.
+
+r
+b 20
+c
+x/3500b $esp

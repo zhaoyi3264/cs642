@@ -1,0 +1,45 @@
+# Device 1: camera
+
+The vulnerability of the BadgerCam is that it only has a limited number of preset combinations of user names and passwords. These user names and passwords are given, so we can brute-force all possibilities to log in. Moreover, these user names and passwords are short and very easy to guess.
+
+We used the keyword "BadgerCam" on Nidan to search the camera and found that its IPv6 address is [2607:f388:1080:0700:c7e0:74cb:2011:f548]:8001. We visited the website and tried all different user names and passwords combinations to log in. After logged in, the video showed the user name and password for the router.
+
+To mitigate the vulnerability, BadgerCam should force the user to set a customized user name and a complex password on their first login. To make sure the user's new password is complex and hard to guess, we can introduce additional requirements. For example, it should have at least 10 characters, upper-case and lower-case letters, digits, special characters.
+
+# Device 2: router
+
+The vulnerability of the router is that its user name and password are shown directly in the BadgerCam. Once we are logged in, we can see another vulnerability that we can view addresses and ports of all the internal devices, and we are free to change the forwarding rule to expose these internal devices to the public.
+
+We used keyword "ip:2607:f388:1080:0700:c7e0:74cb:2011:f548" on Nidan to search the router and found it is on 8004 port. We visited the website, entered the login (admin) and password (husk1e$are@wesome!!) we saw in the BadgerCam. Once logged in, we clicked the "Do Things" button in Quick Setup. In the LAN tab, we saw a list of internal IPs and ports assigned to different devices. In the Forwarding tab, we added three forwarding rule that maps the different ports at the public IP address to internal ports at internal IP addresses. This way, we were allowed to access the internal sites from public IP addresses and ports. The table below shows the setup. After this change, we were able to access these internal devices at [2607:f388:1080:0700:c7e0:74cb:2011:f548] address on port 8000 - 8004.
+
+Service Port	Internal Port	IP Address	Device
+8002		8008		192.168.0.2	Badger Speaker
+8003		7615		192.168.0.3	Badger Voice Assistant
+8000		9123		192.168.0.4	Badger Microwave
+8001		8083		192.168.0.1	BadgerCam Camera
+
+To mitigate the vulnerability, we should first hide the router login and password away from the camera. In addition, we could enable multi-factor authentication for the router. Lastly, we could disable the port forwarding function in the router completely.
+
+# Device 3: speaker
+
+The vulnerability of the BadgerSpeaker is that it does not do any authentication when receiving the POST request, so once its address is exposed, anyone can send any voice file and play it.
+
+We created a single channel .flac audio file which says "turn on the microwave". Then, we uploaded the audio file to https://www.file.io and got a public URL of it. Lastly, we used the following command to send a POST request to the speaker: curl --socks5 localhost:1080 -g [2607:f388:1080:0700:c7e0:74cb:2011:f548]:8002 -X POST -d "url=<PUBLIC FILE URL>". Now, the speaker will play the audio file.
+
+To mitigate the vulnerability, we should add user authentication for the speaker. For example, we can require users to be logged in to play audio files.
+
+# Device 4: voice assistant
+
+The vulnerability of the BadgerVoice Assistant is that it does not require a wake word and blindly executes whatever it hears regardless of who said it.
+
+We used the BadgerSpeaker to issue the command "turn on the microwave" by sending the POST request, and then the BadgerVoice Assistant will literally turn on the microwave.
+
+To mitigate the vulnerability, we could add a wake word for the BadgerVoice Assistant and make it to be able to only respond to the owners' voices.
+
+# Device 5: microwave
+
+The vulnerability of the microwave is that it does not check if it is empty before it starts working and does not stop if it is overheated.
+
+We let the voice assistant pass the malicious command to the microwave by making the BadgerSpeaker play pre-recorded audio. Then, the microwave will just execute the received command blindly.
+
+To mitigate the vulnerability, we should make the microwave check if it is empty before it starts working. If it is empty, then it should not start. Also, it should be able to shut down automatically if it overheats.

@@ -1,0 +1,10 @@
+Use this file to explain how your sploit5 works.
+
+r
+b 9
+print $ebp + 4
+x/4b 0xbffffc9c
+
+b 18
+x argv[1]
+x/200b 0xbffffe0e

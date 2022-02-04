@@ -1,0 +1,99 @@
+# Trace 1: HTTP
+## Give three websites (domain Name and IP addresses) visited from source IP address `192.168.0.100`
+
+- www.amazon.com (205.251.242.54)
+- www.bing.com (69.16.143.26)
+- www.baidu.com (180.76.3.151)
+
+## Give three search queries and the domain of the site for each query made from source IP address `192.168.0.100`
+
+- The search query is "adventures in Stochastic Processes" on Amazon.
+  - Full URL: http://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Dstripbooks&field-keywords=adventures+in+Stochastic+Processes
+  - Domain name: www.amazon.com
+- The search query is "chicago metro" on Bing.
+  - Full URL: http://www.bing.com/search?q=chicago+metro&go=%E6%8F%90%E4%BA%A4&qs=n&form=QBRE&pq=chicago+metro&sc=8-13&sp=-1&sk=&cvid=3dafaeb94bb04c35a9efa4621371beb1
+  - Domain name: www.bing.com
+- The search query is "madison map" on Bing.
+  - Full URL: http://www.bing.com/search?q=madison+map&go=&qs=n&form=QBLH&pq=madison+map&sc=8-5&sp=-1&sk=&cvid=21ab45dc55634583bed819be11051864
+  - Domain name: www.bing.com
+- The search query is "来自星星的你" on Baidu
+  - Full URL: http://www.baidu.com/s?wd=%E6%9D%A5%E8%87%AA%E6%98%9F%E6%98%9F%E7%9A%84%E4%BD%A0&rsv_bp=0&ch=&tn=baidu&bar=&rsv_spt=3&ie=utf-8&rsv_sug3=14&rsv_sug4=794&rsv_sug1=3&rsv_sug2=0&inputT=2
+  - Domain name: www.baidu.com
+
+# Trace 2: FTP
+## What is the user name and password used to connect to the FTP server?
+
+- user name: shiningmoon
+- password: public
+
+## List any (and all) files that were downloaded.
+
+- /dragon.zip
+- /phase1/ARP.java
+- /phase1/L2Switch.java
+- /TeNet/phase1.html
+
+## List the full path for two files (in different directories) on the FTP server that were NOT downloaded.
+
+- /jerry5tests.zip
+- /phase1/StoreForwardingDatalink.java
+
+# Trace 3: Traceroute
+## Briefly describe how the traceroute tool works including which network protocols are in use.
+
+The traceroute tool by default sends UDP packets to the destination address. Users can specify what protocol (ICMP, UDP, TCP) to use.
+
+The traceroute sends out packets with increasing TTL values to the destination. When a router receives a packet, it decrements the TTL value. If the TTL value becomes 0, then the router will drop the packet and send an ICMP Time Exceeded message back to the source. When the destination receives the packet, it will send back an ICMP Destination Unreachable or ICMP Echo Reply.
+
+The packet with a TTL value of 1 will be dropped at the first router, the packet with a TTL value of 2 will be dropped at the second router, and so on and so forth. The traceroute uses ICMP packets sent back from the routers to gradually builds a list of intermediate routers.
+
+## Give the source IP address that issued the traceroute command and the destination IP address.
+
+- source: 192.168.0.100
+- destination: 74.125.225.46
+
+## List the IP addresses on the route between source and destination.
+
+- 192.168.0.100 (source)
+- 10.131.180.1
+- 96.34.20.20
+- 96.34.17.95
+- 96.34.16.112
+- 96.34.16.77
+- 96.34.2.4
+- 96.34.0.7
+- 96.34.0.9
+- 96.34.3.9
+- 96.34.152.30
+- 209.85.254.120
+- 209.85.250.28
+- 74.125.225.46 (destination)
+
+# Trace 4: POP
+## What is the POP username and password?
+
+- user name: cs155@dummymail.com
+- password: whitehat
+
+## How many emails are in the user's mailbox?
+
+There are 5 emails according to the response of LIST command (packet 9006).
+
+## Give the contents of from, to, subject, and date for one email message.
+
+Packet 11961
+
+Date: Fri, 23 Apr 2010 10:25:00 -0700
+From: hariny <harinym@stanford.edu>
+To: cs155@dummymail.com
+Subject: test message
+Content:
+hope you are enjoying your project.
+
+thanks
+cs155ta
+
+## What email client (application) and operating system is this person using to send and receive email?
+
+- email client: Thunderbird 2.0.0.23
+- operating system: Windows/20090812

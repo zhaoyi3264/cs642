@@ -1,0 +1,32 @@
+For each attack, describe:
+(1) the vulnerability you exploited
+(2) how/why your attack works
+(3) one idea for how to mitigate the vulnerability.
+
+Part A:
+
+This is a Cross-site scripting attack. If the user clicks on the malicious link provided by the attacker, it will open a legimate site, but also execute malicious script on the victim server. The vulnerability is that the "user" request parameter is not checked and sanitized before substituting into the HTML document.
+
+The malicious link designed carefully such that when clicked, it takes the user to zoobar.org/users.php page, but set the "user" input field in the form on the website. The input value is set to whatever that comes after the user= in the malicious link. which is "><script>...</script><. The first "> terminates the <input> tag and the <script></script> are treated as actual HTML by the browser and executed. The malicious code in the <script> tag creates a new image and sets its src to the URL of the script that sends the email. This causes the broswer to send a get request to the src link with the cookie in the request parameters, which effectively sends an email with the cookie to the attacker.
+
+One way to protect this is to valid the request and input data by removing special characters.
+
+Part B:
+
+This is a Cross-site request forgery attack. If the user visits the malicious page, which contains malicious code that causes the broswer to perform unintended actions. The vulnerability is that the server accepts requests from all sources, even from the attacker's website.
+
+The HTML page contains an iframe and a form and both of them are hidden. The form contains the exact same input fields (recipient and zoobars) as the form on zoobar.org/transfer.php. The recipient is set to "attacker" and the zoobars is set to 10. When the HTML is loaded, the JavaScript code clicks the form submit button and submit the form to zoobar.org/transfer.php. As a result, the user unintentionally send 10 zoobars to the attacker. The response is received in the iframe (target="frame") to avoid redirecting the top level window to zoobar.org/transfer.php. Once the submit button is clicked, it automatically triggers the onclick callback method, which redirect the user to bing.com.
+
+One way to protect this is to embed a hidden, secret validation token in the form. The attacker should not be able to forge the token and the server should be able to validate it.
+
+Part C:
+
+This is a SQL injection attack. The vulnerability is that the server substitute the user input string directly into the SQL statement without sanitizing the input. The input string can contain SQL statement that causes database leakages or damages.
+
+The HTML page contains a user name input field, and a hidden password input field. After the user enter the user name and click the login button, the user name input is modified before the post request is sent to zoobar.org/login.php. If the user name is v1, it is modified to be v1'-- plus the current epoch time. The password is set to jibberish plus current epoch time.
+
+In addition, the request is a register request, which makes the server call _addRegistration and creates a new user. To create a new user, the user name has to be unique. The uniqueness of the user name is guaranteed by the epoch time in the user name. After the new user is created, the _addRegistration calls _checkLogin with the same user name and password.
+
+In _checkLogin, the first check (SELECT Salt FROM ...) is able to pass because the user name exists. For the second check (SELECT * FROM Person ...), the '$username' is replaced with 'v1'--...', so the password check is commented out by the --, and the user name to find becomes v1, which we assume already exists. So the attacker is able to login as v1.
+
+One way to protect this it to check and sanitize the input string, or use parameterized SQL commands.

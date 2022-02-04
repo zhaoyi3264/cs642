@@ -1,0 +1,10 @@
+Use this file to explain how your sploit2 works.
+
+r
+b bar
+c
+x/250b $esp
+
+??
+esp: 0xbffffd80
+ebp: 0xbffffe58

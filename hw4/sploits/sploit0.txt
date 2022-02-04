@@ -1,0 +1,7 @@
+Use this file to explain how your sploit0 works.
+
+r
+b main
+print $ebp
+
+disassemble main, look for else branch
